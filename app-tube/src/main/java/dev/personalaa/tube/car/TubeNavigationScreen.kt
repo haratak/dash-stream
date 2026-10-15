@@ -9,27 +9,19 @@ import androidx.car.app.model.Action
 import androidx.car.app.model.ActionStrip
 import androidx.car.app.model.ItemList
 import androidx.car.app.model.OnClickListener
-import androidx.car.app.model.ParkedOnlyOnClickListener
 import androidx.car.app.model.Row
 import androidx.car.app.model.SearchTemplate
 import androidx.car.app.model.Template
 import androidx.car.app.navigation.model.NavigationTemplate
-import dev.personalaa.carsurface.DrivingStateMonitor
 import dev.personalaa.carsurface.TouchEventMapper
 import dev.personalaa.carsurface.VirtualDisplayHost
 import dev.personalaa.tube.TubeApplication
-import java.util.concurrent.Executors
 
 class TubeNavigationScreen(
     carContext: CarContext,
     private val app: TubeApplication,
 ) : Screen(carContext), SurfaceCallback {
     private val displayHost = VirtualDisplayHost(carContext)
-    private val executor = Executors.newSingleThreadExecutor()
-    private val drivingMonitor = DrivingStateMonitor(carContext, executor) { driving ->
-        displayHost.setDriving(driving)
-        invalidate()
-    }
     private var lastScrollY = 0f
 
     init {
@@ -37,17 +29,8 @@ class TubeNavigationScreen(
         displayHost.attachContent(app.webViewController.obtainView())
         lifecycle.addObserver(
             object : androidx.lifecycle.DefaultLifecycleObserver {
-                override fun onStart(owner: androidx.lifecycle.LifecycleOwner) {
-                    drivingMonitor.start()
-                }
-
-                override fun onStop(owner: androidx.lifecycle.LifecycleOwner) {
-                    drivingMonitor.stop()
-                }
-
                 override fun onDestroy(owner: androidx.lifecycle.LifecycleOwner) {
                     displayHost.release()
-                    executor.shutdown()
                 }
             },
         )
@@ -57,7 +40,7 @@ class TubeNavigationScreen(
         val back = Action.Builder()
             .setTitle("戻る")
             .setOnClickListener(
-                ParkedOnlyOnClickListener.create {
+                OnClickListener {
                     app.webViewController.goBack()
                 },
             )
@@ -65,7 +48,7 @@ class TubeNavigationScreen(
         val home = Action.Builder()
             .setTitle("ホーム")
             .setOnClickListener(
-                ParkedOnlyOnClickListener.create {
+                OnClickListener {
                     app.webViewController.goHome()
                 },
             )
@@ -73,7 +56,7 @@ class TubeNavigationScreen(
         val playPause = Action.Builder()
             .setTitle("再生/停止")
             .setOnClickListener(
-                ParkedOnlyOnClickListener.create {
+                OnClickListener {
                     app.webViewController.togglePlayPause()
                 },
             )
@@ -148,7 +131,7 @@ class TubeSearchScreen(
                     .addItem(
                         Row.Builder()
                             .setTitle("ヒント")
-                            .addText("検索は停車中に行ってください。動画 URL はスマホの共有が便利です。")
+                            .addText("動画 URL はスマホの YouTube 共有が便利です。")
                             .build(),
                     )
                     .build(),

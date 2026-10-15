@@ -3,8 +3,7 @@
     <string name="app_name">AA Tube</string>
     <string name="car_app_name">YouTube</string>
     <string name="settings_title">AA Tube</string>
-    <string name="settings_subtitle">Android Auto で YouTube を視聴（停車中のみ映像表示）</string>
+    <string name="settings_subtitle">Android Auto で YouTube を視聴</string>
     <string name="open_youtube_phone">スマホで YouTube を開く</string>
     <string name="share_hint">YouTube アプリの「共有」から AA Tube を選ぶと、車載画面でその動画を開けます。</string>
-    <string name="driving_blocked">走行中のため映像を非表示にしています</string>
 </resources>

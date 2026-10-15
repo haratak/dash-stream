@@ -8,7 +8,7 @@ Android Auto の車載画面で YouTube（`m.youtube.com`）を表示する個�
 | --- | --- |
 | `app-tube` | 車載 YouTube（WebView + Car App Navigation Surface） |
 | `app-installer` | GitHub Releases から `app-tube` を取得してインストール |
-| `core/car-surface` | Surface → VirtualDisplay → Presentation、タッチ、走行中の映像マスク |
+| `core/car-surface` | Surface → VirtualDisplay → Presentation、タッチ |
 | `core/installer` | GitHub API、PackageInstaller、Shizuku |
 
 ## ビルド
@@ -42,7 +42,7 @@ adb install -i com.android.vending app-tube/build/outputs/apk/debug/app-tube-deb
 2. 車載ランチャーから **YouTube（AA Tube）** を開く。
 3. 動画 URL は **YouTube アプリ → 共有 → AA Tube** が最も簡単。
 4. 車載画面の ActionStrip: 戻る / ホーム / 再生・停止 / 検索。
-5. **走行中は映像を黒画面で隠します**（音声は WebView 側の挙動に依存）。停車中のみ視聴してください。
+5. 走行中も車載 Surface に映像を表示します。**運転中の動画視聴は法令・安全上禁止される場合があります。自己責任で利用してください。**
 
 ## DHU（Desktop Head Unit）での開発
 

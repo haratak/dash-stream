@@ -6,8 +6,6 @@ import android.hardware.display.DisplayManager
 import android.hardware.display.VirtualDisplay
 import android.os.Handler
 import android.os.Looper
-import android.view.Display
-import android.view.Surface
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -25,17 +23,10 @@ class VirtualDisplayHost(
     private var root: FrameLayout? = null
     private var currentContainer: SurfaceContainer? = null
     private var contentView: View? = null
-    private var drivingOverlay: View? = null
 
     fun attachContent(view: View) {
         contentView = view
         root?.let { mountContent(it, view) }
-    }
-
-    fun setDriving(driving: Boolean) {
-        mainHandler.post {
-            drivingOverlay?.visibility = if (driving) View.VISIBLE else View.GONE
-        }
     }
 
     fun onSurfaceAvailable(container: SurfaceContainer) {
@@ -72,15 +63,6 @@ class VirtualDisplayHost(
                     setContentView(frame)
                     root = frame
                     contentView?.let { mountContent(frame, it) }
-                    drivingOverlay = View(context).apply {
-                        setBackgroundColor(0xFF000000.toInt())
-                        layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                            FrameLayout.LayoutParams.MATCH_PARENT,
-                        )
-                        visibility = View.GONE
-                    }
-                    frame.addView(drivingOverlay)
                 }
             }
             presentation?.show()
@@ -111,7 +93,6 @@ class VirtualDisplayHost(
         (view.parent as? ViewGroup)?.removeView(view)
         frame.addView(
             view,
-            0,
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT,
@@ -123,12 +104,7 @@ class VirtualDisplayHost(
         runCatching { presentation?.dismiss() }
         presentation = null
         root = null
-        drivingOverlay = null
         runCatching { virtualDisplay?.release() }
         virtualDisplay = null
-    }
-
-    companion object {
-        private const val TAG = "VirtualDisplayHost"
     }
 }
